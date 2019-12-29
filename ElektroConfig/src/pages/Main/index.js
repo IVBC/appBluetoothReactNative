@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import PropTypes from 'prop-types';
-import { Image } from 'react-native';
 import {
     Container,
     Logo,
@@ -17,8 +16,7 @@ export default function Main({ navigation }) {
     return (
         <Container>
             <Body>
-                <Image source={iconTPV} />
-                {/* <Logo source={iconTPV} /> */}
+                <Logo source={iconTPV} />
                 <InitialButton onPress={() => navigation.navigate('Steps')}>
                     <Icon name="settings" size={20} color="#FFF" />
                     <InitialButtonText> Start </InitialButtonText>

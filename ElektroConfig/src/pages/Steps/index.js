@@ -11,8 +11,6 @@ import Bluetooth from './Bluetooth';
 import Update from './Update';
 import Result from './Result';
 
-const PAGES = ['Page 1', 'Page 2', 'Page 3', 'Page 4', 'Page 5'];
-
 // const firstIndicatorStyles = {
 //     stepIndicatorSize: 30,
 //     currentStepIndicatorSize: 40,
@@ -130,10 +128,6 @@ const getStepIndicatorIconConfig = ({ position, stepStatus }) => {
             break;
         }
         case 3: {
-            iconConfig.name = 'update';
-            break;
-        }
-        case 4: {
             iconConfig.name = 'receipt';
             break;
         }
@@ -226,6 +220,7 @@ export default class Steps extends Component {
                 </View> */}
                 <View style={styles.stepIndicator}>
                     <StepIndicator
+                        stepCount={4}
                         renderStepIndicator={this.renderStepIndicator}
                         customStyles={secondIndicatorStyles}
                         currentPosition={this.state.currentStep}
@@ -233,7 +228,6 @@ export default class Steps extends Component {
                         labels={[
                             'Asset Shell',
                             'Device',
-                            'Bluetooth',
                             'Update Firmware',
                             'Result',
                         ]}
@@ -254,7 +248,7 @@ export default class Steps extends Component {
                     />
                 </View> */}
                 <ViewPager
-                    style={{ flex: 1 }}
+                    style={{ flex: 1, backgroundColor: 'red' }}
                     ref={viewPager => {
                         this.viewPager = viewPager;
                     }}
@@ -277,7 +271,6 @@ export default class Steps extends Component {
                         key="device"
                     />
                     <Bluetooth key="bluetooth" />
-                    <Update key="update" />
                     <Result key="result" />
                 </ViewPager>
             </View>

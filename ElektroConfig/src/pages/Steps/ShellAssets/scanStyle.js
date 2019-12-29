@@ -1,11 +1,11 @@
 import { Dimensions } from 'react-native';
 
-const deviceWidth = Dimensions.get('screen').width;
-const deviceHeight = Dimensions.get('screen').height;
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
 const styles = {
     scrollViewStyle: {
-        // flex: 1,
-        justifyContent: 'center',
+        flex: 1,
+        // justifyContent: 'center',
         backgroundColor: '#045b9b',
     },
 
@@ -17,6 +17,7 @@ const styles = {
         color: 'white',
     },
     cardView: {
+        // flex: 1,
         width: deviceWidth - 32,
         height: deviceHeight / 2,
         alignSelf: 'center',
