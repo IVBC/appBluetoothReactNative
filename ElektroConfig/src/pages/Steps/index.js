@@ -199,6 +199,7 @@ export default class Steps extends Component {
     // };
 
     render() {
+        const { currentStep } = this.state;
         return (
             <View style={styles.container}>
                 {/* <View style={styles.stepIndicator}>
@@ -221,7 +222,7 @@ export default class Steps extends Component {
                         stepCount={4}
                         renderStepIndicator={this.renderStepIndicator}
                         customStyles={secondIndicatorStyles}
-                        currentPosition={this.state.currentStep}
+                        currentPosition={currentStep}
                         onPress={this.onStepPress}
                         labels={[
                             'Asset Shell',
