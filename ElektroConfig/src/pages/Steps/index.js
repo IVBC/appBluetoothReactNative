@@ -8,7 +8,6 @@ import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import ShellAssets from './ShellAssets';
 import Device from './Device';
 import Bluetooth from './Bluetooth';
-import Update from './Update';
 import Result from './Result';
 
 // const firstIndicatorStyles = {
@@ -143,7 +142,6 @@ export default class Steps extends Component {
         super();
         this.state = {
             currentStep: 0,
-            currentPagebug: 1,
             dataShellAsset: '',
             dataDevice: '',
         };
@@ -160,7 +158,7 @@ export default class Steps extends Component {
 
     onStepPress = position => {
         console.tron.log('apertou -->', position);
-        this.setState({ currentStep: position, currentPagebug: position });
+        this.setState({ currentStep: position });
         this.viewPager.setPage(position);
     };
 
@@ -257,7 +255,6 @@ export default class Steps extends Component {
                         console.tron.log(page.nativeEvent.position);
                         this.setState({
                             currentStep: page.nativeEvent.position,
-                            currentPagebug: page.nativeEvent.position,
                         });
                     }}
                 >

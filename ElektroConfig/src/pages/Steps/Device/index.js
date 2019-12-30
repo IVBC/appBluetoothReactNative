@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import { TouchableOpacity, Text, StatusBar, View } from 'react-native';
+import { TouchableOpacity, Text, View, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './scanStyle';
@@ -58,13 +58,13 @@ class Device extends Component {
     render() {
         const { scan, ScanResult, result } = this.state;
         const desccription =
-            'Asset Shell QR Code is an Asset Administration Shell (AAS) identifier required for the firmware settings of a medication or control unit. This identification contains information such as the network ssid and password, the broker URL and port, and the topic for MQTT. Please authorize your device to user the camera and point to AAS QR code.';
+            "This QR code contains the device identifier for the Bluetooth connection required for the firmware settings of a medication or control unit. Authorize your device to use the camera and point to the device's QR code ";
         return (
             <View style={styles.scrollViewStyle}>
                 <>
-                    <StatusBar barStyle="dark-content" />
+                    {/* <StatusBar barStyle="dark-content" /> */}
                     <Text style={styles.textTitle}>
-                        Please scan Asset Shell QR code
+                        Please scan Device QR code
                     </Text>
                     {!scan && !ScanResult && (
                         <View style={styles.cardView}>
@@ -90,7 +90,7 @@ class Device extends Component {
 
                     {ScanResult && (
                         <>
-                            <Text style={styles.textTitle1}>Result !</Text>
+                            {/* <Text style={styles.textTitle1}>Result !</Text> */}
                             <View
                                 style={
                                     ScanResult
@@ -98,11 +98,53 @@ class Device extends Component {
                                         : styles.cardView
                                 }
                             >
-                                <Text>Type : {result.type}</Text>
-                                <Text>Result : {result.data}</Text>
-                                <Text numberOfLines={1}>
+                                <View style={{ height: 300 }}>
+                                    <FlatList
+                                        style={{}}
+                                        data={Object.keys(
+                                            JSON.parse(result.data)
+                                        )}
+                                        renderItem={({ item }) => (
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+
+                                                    borderBottomWidth: 1,
+                                                    borderColor: '#c0c0c0',
+                                                    alignItems: 'center',
+                                                    marginVertical: 8,
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 20,
+                                                        textTransform:
+                                                            'uppercase',
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                >
+                                                    {item} :{' '}
+                                                </Text>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 20,
+                                                    }}
+                                                >
+                                                    {
+                                                        JSON.parse(result.data)[
+                                                            item
+                                                        ]
+                                                    }
+                                                </Text>
+                                            </View>
+                                        )}
+                                        keyExtractor={item => item}
+                                    />
+                                </View>
+
+                                {/* <Text numberOfLines={1}>
                                     RawData: {result.rawData}
-                                </Text>
+                                </Text> */}
                                 <TouchableOpacity
                                     onPress={this.scanAgain}
                                     style={styles.buttonTouchable}
@@ -116,49 +158,55 @@ class Device extends Component {
                     )}
 
                     {scan && (
-                        <QRCodeScanner
-                            reactivate
-                            showMarker
-                            ref={node => {
-                                this.scanner = node;
-                            }}
-                            onRead={this.onSuccess}
-                            topContent={
-                                <Text style={styles.centerText}>
-                                    Go to{' '}
-                                    <Text style={styles.textBold}>
-                                        wikipedia.org/wiki/QR_code
-                                    </Text>{' '}
-                                    on your computer and scan the QR code to
-                                    test.
-                                </Text>
-                            }
-                            bottomContent={
-                                <View>
-                                    <TouchableOpacity
-                                        style={styles.buttonTouchable}
-                                        onPress={() =>
-                                            this.scanner.reactivate()
-                                        }
-                                    >
-                                        <Text style={styles.buttonTextStyle}>
-                                            OK. Got it!
-                                        </Text>
-                                    </TouchableOpacity>
+                        <View style={{ flex: 1 }}>
+                            <QRCodeScanner
+                                reactivate
+                                showMarker
+                                ref={node => {
+                                    this.scanner = node;
+                                }}
+                                onRead={this.onSuccess}
+                                // topContent={
+                                //     <Text style={styles.centerText}>
+                                //         Go to{' '}
+                                //         <Text style={styles.textBold}>
+                                //             wikipedia.org/wiki/QR_code
+                                //         </Text>{' '}
+                                //         on your computer and scan the QR code to
+                                //         test.
+                                //     </Text>
+                                // }
+                                bottomContent={
+                                    <View>
+                                        {/* <TouchableOpacity
+                                            style={styles.buttonTouchable}
+                                            onPress={() =>
+                                                this.scanner.reactivate()
+                                            }
+                                        >
+                                            <Text
+                                                style={styles.buttonTextStyle}
+                                            >
+                                                OK. Got it!
+                                            </Text>
+                                        </TouchableOpacity> */}
 
-                                    <TouchableOpacity
-                                        style={styles.buttonTouchable}
-                                        onPress={() =>
-                                            this.setState({ scan: false })
-                                        }
-                                    >
-                                        <Text style={styles.buttonTextStyle}>
-                                            Stop Scan
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            }
-                        />
+                                        <TouchableOpacity
+                                            style={styles.buttonTouchable}
+                                            onPress={() =>
+                                                this.setState({ scan: false })
+                                            }
+                                        >
+                                            <Text
+                                                style={styles.buttonTextStyle}
+                                            >
+                                                Stop Scan
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                }
+                            />
+                        </View>
                     )}
                 </>
             </View>
