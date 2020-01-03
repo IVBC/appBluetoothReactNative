@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import ViewPager from '@react-native-community/viewpager';
 
 import StepIndicator from 'react-native-step-indicator';
@@ -142,13 +142,40 @@ export default class Steps extends Component {
         super();
         this.state = {
             currentStep: 0,
-            dataShellAsset: '',
-            dataDevice: '',
+            dataShellAsset: null,
+            dataDevice: null,
         };
     }
 
-    componentDidUpdate(nextProps, nextState) {
-        console.tron.log(nextState, this.state);
+    componentDidUpdate(prevProps, prevState) {
+        const { currentStep, dataShellAsset, dataDevice } = this.state;
+        console.tron.log(prevState, this.state);
+        if (currentStep === 1) {
+            if (!dataShellAsset) {
+                this.viewPager.setPage(prevState.currentStep);
+                Alert.alert(
+                    'The previous step is required.',
+                    'Asset Shell data required via QR Code'
+                );
+            }
+        }
+        if (currentStep === 2) {
+            if (!dataShellAsset && !dataDevice) {
+                this.viewPager.setPage(prevState.currentStep);
+                if (!dataShellAsset) {
+                    this.viewPager.setPage(prevState.currentStep);
+                    Alert.alert(
+                        'The previous step is required.',
+                        'Asset Shell data required via QR Code'
+                    );
+                } else {
+                    Alert.alert(
+                        'The previous step is required.',
+                        'Device data required via QR Code'
+                    );
+                }
+            }
+        }
         // if (nextState.currentPage != this.state.currentPage) {
         //     // if (this.viewPager) {
         //     //     this.viewPager.setPage(nextState.currentPage);
@@ -162,13 +189,13 @@ export default class Steps extends Component {
         this.viewPager.setPage(position);
     };
 
-    renderViewPagerPage = data => {
-        return (
-            <View key={data} style={styles.page}>
-                <Text>{data}</Text>
-            </View>
-        );
-    };
+    // renderViewPagerPage = data => {
+    //     return (
+    //         <View key={data} style={styles.page}>
+    //             <Text>{data}</Text>
+    //         </View>
+    //     );
+    // };
 
     renderStepIndicator = params => (
         <MaterialIcon {...getStepIndicatorIconConfig(params)} />
@@ -182,6 +209,14 @@ export default class Steps extends Component {
     handleDataDevice = async data => {
         console.tron.log(data);
         this.setState({ dataDevice: data });
+    };
+
+    handleNextPage = async is => {
+        if (is) {
+            const { currentStep } = this.state;
+            this.setState({ currentStep: currentStep + 1 });
+            this.viewPager.setPage(currentStep + 1);
+        }
     };
 
     // renderLabel = ({ position, stepStatus, label, currentPosition }) => {
@@ -199,7 +234,7 @@ export default class Steps extends Component {
     // };
 
     render() {
-        const { currentStep } = this.state;
+        const { currentStep, dataShellAsset, dataDevice } = this.state;
         return (
             <View style={styles.container}>
                 {/* <View style={styles.stepIndicator}>
@@ -252,8 +287,6 @@ export default class Steps extends Component {
                         this.viewPager = viewPager;
                     }}
                     onPageSelected={page => {
-                        console.tron.log(page);
-                        console.tron.log(page.nativeEvent.position);
                         this.setState({
                             currentStep: page.nativeEvent.position,
                         });
@@ -268,8 +301,15 @@ export default class Steps extends Component {
                         handleDataDevice={this.handleDataDevice}
                         key="device"
                     />
-                    <Bluetooth key="bluetooth" />
-                    <Result key="result" />
+                    <Bluetooth
+                        key="bluetooth"
+                        data={{ dataShellAsset, dataDevice, currentStep }}
+                        handleNextPage={this.handleNextPage}
+                    />
+                    <Result
+                        key="result"
+                        data={{ dataShellAsset, dataDevice }}
+                    />
                 </ViewPager>
             </View>
         );

@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {
-    TouchableOpacity,
-    Text,
-    StatusBar,
-    View,
-    FlatList,
-} from 'react-native';
+import { TouchableOpacity, Text, View, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './scanStyle';
@@ -34,7 +28,7 @@ class Scan extends Component {
             ScanResult: true,
         });
         const { handleDataShellAsset } = this.props;
-        handleDataShellAsset(e.data);
+        handleDataShellAsset(JSON.parse(e.data));
         if (check === 'http') {
             // Linking.openURL(e.data).catch(err =>
             //     console.error('An error occured', err)

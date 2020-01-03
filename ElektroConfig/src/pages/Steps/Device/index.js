@@ -28,7 +28,7 @@ class Device extends Component {
             ScanResult: true,
         });
         const { handleDataDevice } = this.props;
-        handleDataDevice(e.data);
+        handleDataDevice(JSON.parse(e.data));
         if (check === 'http') {
             // Linking.openURL(e.data).catch(err =>
             //     console.error('An error occured', err)

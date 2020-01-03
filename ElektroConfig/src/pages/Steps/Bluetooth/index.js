@@ -3,18 +3,16 @@ import React, { Component } from 'react';
 import {
     Platform,
     PermissionsAndroid, // for checking if certain android permissions are enabled
-    StyleSheet,
     Text,
     View,
     NativeEventEmitter, // for emitting events for the BLE manager
     NativeModules, // for getting an instance of the BLE manager module
     Alert,
-    Dimensions,
     Switch,
     Image,
     TouchableOpacity,
 } from 'react-native';
-
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import BleManager from 'react-native-ble-manager'; // create an event emitter for the BLE Manager module
 
@@ -34,18 +32,32 @@ const bleManagerEmitter = new NativeEventEmitter(BleManagerModule); // for showi
 // next: create main component
 
 export default class Bluetooth extends Component {
+    static propTypes = {
+        data: PropTypes.shape({
+            dataShellAsset: PropTypes.object,
+            dataDevice: PropTypes.object,
+            currentStep: PropTypes.number,
+        }).isRequired,
+        handleNextPage: PropTypes.func.isRequired,
+    };
+
     constructor() {
         super();
         this.state = {
+            dataDevice: { id: null },
+            dataShellAsset: null,
+            nameDevice: null,
             is_scanning: false, // whether the app is currently scanning for peripherals or not
             enable: false,
             peripherals: null, // the peripherals detected
             connected_peripheral: null, // the currently connected peripheral
+            connecting: false,
             // eslint-disable-next-line react/no-unused-state
             user_id: null, // the ID of the current user
             attendees: null, // the attendees currently synced with the app
             promptVisible: false, // whether the prompt for the user's name is visible or not
             has_attended: false, // whether the current user has already attended
+            done: false,
         };
 
         this.peripherals = []; // temporary storage for the detected peripherals
@@ -57,79 +69,107 @@ export default class Bluetooth extends Component {
     // // eslint-disable-next-line react/no-deprecated
     // componentWillMount() {}
 
-    componentDidMount() {
-        bleManagerEmitter.addListener(
-            'BleManagerDiscoverPeripheral',
-            peripheral => {
-                // console.tron.log(peripheral);
-                const { peripherals } = this; // get the peripherals
-                // check if the peripheral already exists
-                // const el = peripherals.filter(e => {
-                //     return e.id === peripheral.id;
-                // });
+    // componentDidMount() {}
 
-                // if (!el.length) {
-                //     peripherals.push({
-                //         id: peripheral.id, // mac address of the peripheral
-                //         name: peripheral.name, // descriptive name given to the peripheral
-                //     });
-                //     this.peripherals = peripherals; // update the array of peripherals
-                // }
-                if (peripheral.name) {
-                    peripherals.push({
-                        id: peripheral.id, // mac address of the peripheral
-                        name: peripheral.name, // descriptive name given to the peripheral
-                    });
-                    this.peripherals = peripherals; // update the array of peripherals
-                }
-
-                this.setState({ peripherals });
-            }
-        );
-        // next: add code for listening for when the peripheral scan has stopped
-        bleManagerEmitter.addListener('BleManagerStopScan', () => {
-            console.log('scan stopped');
-
-            if (this.peripherals.length === 0) {
-                Alert.alert(
-                    'Nothing found',
-                    'Sorry, no peripherals were found'
-                );
-            } else {
-                const device = this.peripherals.find(obj => {
-                    return obj.name === 'MyESP32';
-                });
-                if (device) {
-                    this.connect(device.id);
-                }
-            }
-            this.setState({
-                is_scanning: false,
-                peripherals: this.peripherals,
+    async UNSAFE_componentWillReceiveProps(props) {
+        const { done } = this.state;
+        // console.tron.log('props new ', props);
+        // console.tron.log('state', this.state);
+        // console.tron.log(
+        //     'if ',
+        //     props.data.dataDevice && props.data.currentStep === 2 && !done
+        // );
+        if (props.data.dataDevice && props.data.currentStep === 2 && !done) {
+            await this.setState({
+                dataDevice: props.data.dataDevice,
+                dataShellAsset: props.data.dataShellAsset,
+                done: true,
             });
-        });
+            // this.setState({ done: true });
+            const {
+                dataDevice: { id: nameDevice },
+            } = this.state;
+            // console.tron.log(' nome device ', nameDevice);
 
-        // const pusher = new Pusher('YOUR PUSHER APP KEY', {
-        //     cluster: 'YOUR PUSHER APP CLUSTER',
-        //     encrypted: true,
-        // });
+            // console.tron.log('state no if', this.state);
 
-        // const channel = pusher.subscribe('attendance-channel');
-        // channel.bind('attendance-event', data => {
-        //     if (data.is_attendees) {
-        //         this.setState({
-        //             attendees: data.attendees,
-        //         });
-        //     } else {
-        //         ToastAndroid.show(
-        //             `${data.full_name} just entered the room!`,
-        //             ToastAndroid.LONG
-        //         );
-        //         this.setState({
-        //             attendees: [...this.state.attendees, data],
-        //         });
-        //     }
-        // });
+            await this.enable();
+
+            bleManagerEmitter.addListener(
+                'BleManagerDiscoverPeripheral',
+                peripheral => {
+                    // console.tron.log(peripheral);
+                    const { peripherals } = this; // get the peripherals
+                    // check if the peripheral already exists
+                    // const el = peripherals.filter(e => {
+                    //     return e.id === peripheral.id;
+                    // });
+
+                    // if (!el.length) {
+                    //     peripherals.push({
+                    //         id: peripheral.id, // mac address of the peripheral
+                    //         name: peripheral.name, // descriptive name given to the peripheral
+                    //     });
+                    //     this.peripherals = peripherals; // update the array of peripherals
+                    // }
+                    if (peripheral.name) {
+                        peripherals.push({
+                            id: peripheral.id, // mac address of the peripheral
+                            name: peripheral.name, // descriptive name given to the peripheral
+                        });
+                        this.peripherals = peripherals; // update the array of peripherals
+                    }
+
+                    this.setState({ peripherals });
+                }
+            );
+            // next: add code for listening for when the peripheral scan has stopped
+            bleManagerEmitter.addListener('BleManagerStopScan', () => {
+                console.log('scan stopped');
+                console.log(this.peripherals);
+                if (this.peripherals.length === 0) {
+                    Alert.alert(
+                        'Nothing found',
+                        'Sorry, no peripherals were found'
+                    );
+                } else {
+                    const device = this.peripherals.find(obj => {
+                        return obj.name === nameDevice;
+                    });
+                    console.log(nameDevice);
+                    if (device) {
+                        this.setState({ connecting: true });
+                        this.connect(device.id);
+                    }
+                }
+                this.setState({
+                    is_scanning: false,
+                    peripherals: this.peripherals,
+                });
+            });
+
+            // const pusher = new Pusher('YOUR PUSHER APP KEY', {
+            //     cluster: 'YOUR PUSHER APP CLUSTER',
+            //     encrypted: true,
+            // });
+
+            // const channel = pusher.subscribe('attendance-channel');
+            // channel.bind('attendance-event', data => {
+            //     if (data.is_attendees) {
+            //         this.setState({
+            //             attendees: data.attendees,
+            //         });
+            //     } else {
+            //         ToastAndroid.show(
+            //             `${data.full_name} just entered the room!`,
+            //             ToastAndroid.LONG
+            //         );
+            //         this.setState({
+            //             attendees: [...this.state.attendees, data],
+            //         });
+            //     }
+            // });
+        }
     }
 
     enable() {
@@ -189,16 +229,18 @@ export default class Bluetooth extends Component {
             is_scanning: true,
         });
 
-        BleManager.scan([], 2).then(() => {
+        BleManager.scan([], 5).then(() => {
             console.log('scan started');
         });
     }
 
     connect(peripheral_id) {
+        const { dataShellAsset } = this.state;
         BleManager.connect(peripheral_id)
             .then(() => {
                 this.setState({
                     connected_peripheral: peripheral_id,
+                    connecting: false,
                 });
 
                 Alert.alert(
@@ -209,6 +251,7 @@ export default class Bluetooth extends Component {
                 // retrieve the services advertised by this peripheral
                 BleManager.retrieveServices(peripheral_id).then(
                     peripheralInfo => {
+                        this.attend.call(this, dataShellAsset);
                         console.log('Peripheral info:', peripheralInfo);
                         console.tron.log(peripheralInfo);
                     }
@@ -238,7 +281,7 @@ export default class Bluetooth extends Component {
             full_name: value,
         };
 
-        const str = JSON.stringify(me); // convert the object to a string
+        const str = JSON.stringify(value); // convert the object to a string
         const bytes = bytesCounter.count(str); // count the number of bytes
         const data = stringToBytes(str); // convert the string to a byte array
 
@@ -272,6 +315,9 @@ export default class Bluetooth extends Component {
                 // disconnect to the peripheral
                 // eslint-disable-next-line react/destructuring-assignment
                 console.log(this.state.connected_peripheral);
+
+                const { handleNextPage } = this.props;
+                handleNextPage(true);
                 // BleManager.disconnect(this.state.connected_peripheral)
                 //     .then(() => {
                 //         Alert.alert(
@@ -297,7 +343,14 @@ export default class Bluetooth extends Component {
     }
 
     render() {
-        const { enable, is_scanning, connected_peripheral } = this.state;
+        const {
+            enable,
+            is_scanning,
+            connected_peripheral,
+            dataDevice: { id: nameDevice },
+            dataShellAsset,
+            connecting,
+        } = this.state;
         return (
             <View style={styles.scrollViewStyle}>
                 <>
@@ -344,7 +397,7 @@ export default class Bluetooth extends Component {
                                             Searching:
                                         </Text>
                                         <Text style={styles.textDevice}>
-                                            MyESP32
+                                            {nameDevice}
                                         </Text>
 
                                         <Spinner
@@ -368,7 +421,7 @@ export default class Bluetooth extends Component {
                                         </Text>
                                         <View style={styles.contentDevice}>
                                             <Text style={styles.textDevice}>
-                                                MyESP32
+                                                {nameDevice}
                                             </Text>
 
                                             <Icon
@@ -382,7 +435,7 @@ export default class Bluetooth extends Component {
                                                 onPress={() => {
                                                     this.attend.call(
                                                         this,
-                                                        'isaque'
+                                                        dataShellAsset
                                                     );
                                                 }}
                                                 style={styles.buttonTouchable}
@@ -392,7 +445,7 @@ export default class Bluetooth extends Component {
                                                         styles.buttonTextStyle
                                                     }
                                                 >
-                                                    Send data
+                                                    Send Again
                                                 </Text>
                                                 <Icon
                                                     name="send"
@@ -404,56 +457,95 @@ export default class Bluetooth extends Component {
                                     </View>
                                 )}
 
-                                {!is_scanning && !connected_peripheral && (
-                                    <View style={styles.body}>
-                                        <Icon
-                                            size={50}
-                                            name="phonelink-erase"
-                                        />
-                                        <Text style={styles.textSeaching}>
-                                            Error: Device not found.
-                                        </Text>
-                                        <View
-                                            style={styles.contentDevice}
-                                            // style={{
-                                            //     flexDirection: 'row',
-                                            //     justifyContent: 'center',
-                                            //     alignItems: 'center',
-                                            //     alignContent: 'center',
-                                            // }}
-                                        >
+                                {!is_scanning &&
+                                    !connected_peripheral &&
+                                    !connecting && (
+                                        <View style={styles.body}>
                                             <Icon
                                                 size={50}
-                                                color="#F00"
-                                                name="close"
+                                                name="phonelink-erase"
                                             />
-                                            <Text style={styles.textDevice}>
-                                                MyESP32
+                                            <Text style={styles.textSeaching}>
+                                                Error: Device not found.
                                             </Text>
-                                        </View>
-                                        <View>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    this.startScan();
-                                                }}
-                                                style={styles.buttonTouchable}
+                                            <View
+                                                style={styles.contentDevice}
+                                                // style={{
+                                                //     flexDirection: 'row',
+                                                //     justifyContent: 'center',
+                                                //     alignItems: 'center',
+                                                //     alignContent: 'center',
+                                                // }}
                                             >
-                                                <Text
+                                                <Icon
+                                                    size={50}
+                                                    color="#F00"
+                                                    name="close"
+                                                />
+                                                <Text style={styles.textDevice}>
+                                                    {nameDevice}
+                                                </Text>
+                                            </View>
+                                            <View>
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        this.startScan();
+                                                    }}
                                                     style={
-                                                        styles.buttonTextStyle
+                                                        styles.buttonTouchable
                                                     }
                                                 >
-                                                    Try Again
-                                                </Text>
-                                                <Icon
-                                                    name="refresh"
-                                                    size={20}
-                                                    color="#FFF"
-                                                />
-                                            </TouchableOpacity>
+                                                    <Text
+                                                        style={
+                                                            styles.buttonTextStyle
+                                                        }
+                                                    >
+                                                        Try Again
+                                                    </Text>
+                                                    <Icon
+                                                        name="refresh"
+                                                        size={20}
+                                                        color="#FFF"
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    </View>
-                                )}
+                                    )}
+
+                                {!is_scanning &&
+                                    !connected_peripheral &&
+                                    connecting && (
+                                        <View style={styles.body}>
+                                            <Icon
+                                                size={50}
+                                                name="bluetooth-searching"
+                                            />
+                                            <Text style={styles.textSeaching}>
+                                                Connecting ... Please wait.
+                                            </Text>
+                                            <View style={styles.contentDevice}>
+                                                <Text style={styles.textDevice}>
+                                                    {nameDevice}
+                                                </Text>
+
+                                                <Spinner
+                                                    size={50}
+                                                    type="Pulse" // Pulse
+                                                    color="#045b9b"
+                                                    isVisible
+                                                />
+                                            </View>
+                                            <View>
+                                                <Spinner
+                                                    size={50}
+                                                    type="Wave"
+                                                    color="#045b9b"
+                                                    isVisible
+                                                    style={styles.spinner}
+                                                />
+                                            </View>
+                                        </View>
+                                    )}
                             </>
                         )}
                     </View>
