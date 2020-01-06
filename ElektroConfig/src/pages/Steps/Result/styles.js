@@ -1,8 +1,12 @@
 const styles = {
     iconReceive: {
+        marginTop: 20,
+        marginBottom: 20,
         justifyContent: 'center',
-        width: 225,
+        width: 800,
         alignItems: 'center',
+        transform: [{ rotate: '90deg' }],
+        // backgroundColor: '#3FFF',
     },
     scrollViewStyle: {
         // justifyContent: 'center',

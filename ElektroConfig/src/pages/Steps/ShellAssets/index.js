@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import { TouchableOpacity, Text, View, FlatList } from 'react-native';
+import { TouchableOpacity, Text, View, FlatList, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './scanStyle';
@@ -15,30 +15,67 @@ class Scan extends Component {
         this.state = {
             scan: false,
             ScanResult: false,
-            result: null,
+            // result: null,
+            dataShellAsset: null,
         };
     }
 
-    onSuccess = e => {
+    onSuccess = async e => {
         const check = e.data.substring(0, 4);
         console.log(`scanned data${check}`);
-        this.setState({
-            result: e,
-            scan: false,
-            ScanResult: true,
-        });
-        const { handleDataShellAsset } = this.props;
-        handleDataShellAsset(JSON.parse(e.data));
-        if (check === 'http') {
-            // Linking.openURL(e.data).catch(err =>
-            //     console.error('An error occured', err)
-            // );
-        } else {
-            this.setState({
-                result: e,
-                scan: false,
-                ScanResult: true,
-            });
+        let dataShell = null;
+        if (e.data) {
+            try {
+                dataShell = JSON.parse(e.data);
+
+                await this.setState({
+                    // result: e,
+                    scan: false,
+                    ScanResult: true,
+                    dataShellAsset: dataShell,
+                });
+                const { handleDataShellAsset } = this.props;
+                const { dataShellAsset } = this.state;
+                handleDataShellAsset(dataShellAsset);
+                if (check === 'http') {
+                    // Linking.openURL(e.data).catch(err =>
+                    //     console.error('An error occured', err)
+                    // );
+                } else {
+                    this.setState({
+                        // result: e,
+                        scan: false,
+                        ScanResult: true,
+                        dataShellAsset: dataShell,
+                    });
+                }
+            } catch (error) {
+                Alert.alert(
+                    'Invalid QR Code',
+                    'Please check string if it is in json format'
+                );
+                await this.setState({
+                    // result: e,
+                    scan: false,
+                    ScanResult: false,
+                    dataShellAsset: dataShell,
+                });
+                // const { handleDataShellAsset } = this.props;
+                // const { dataShellAsset } = this.state;
+                // handleDataShellAsset(dataShellAsset);
+                if (check === 'http') {
+                    // Linking.openURL(e.data).catch(err =>
+                    //     console.error('An error occured', err)
+                    // );
+                } else {
+                    this.setState({
+                        // result: e,
+                        scan: false,
+                        ScanResult: false,
+                        dataShellAsset: dataShell,
+                    });
+                }
+            }
         }
     };
 
@@ -56,7 +93,7 @@ class Scan extends Component {
     };
 
     render() {
-        const { scan, ScanResult, result } = this.state;
+        const { scan, ScanResult, dataShellAsset } = this.state;
         const desccription =
             'Asset Shell QR Code is an Asset Administration Shell (AAS) identifier required for the firmware settings of a medication or control unit. This identification contains information such as the network ssid and password, the broker URL and port, and the topic for MQTT. Please authorize your device to user the camera and point to AAS QR code.';
         return (
@@ -101,9 +138,7 @@ class Scan extends Component {
                                 <View style={{ height: 300 }}>
                                     <FlatList
                                         style={{}}
-                                        data={Object.keys(
-                                            JSON.parse(result.data)
-                                        )}
+                                        data={Object.keys(dataShellAsset)}
                                         renderItem={({ item }) => (
                                             <View
                                                 style={{
@@ -130,11 +165,7 @@ class Scan extends Component {
                                                         fontSize: 20,
                                                     }}
                                                 >
-                                                    {
-                                                        JSON.parse(result.data)[
-                                                            item
-                                                        ]
-                                                    }
+                                                    {dataShellAsset[item]}
                                                 </Text>
                                             </View>
                                         )}

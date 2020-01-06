@@ -217,7 +217,7 @@ export default class Steps extends Component {
     );
 
     handleDataShellAsset = async data => {
-        console.tron.log(data);
+        console.tron.log('settandoo dado no handleDataSheelAsset:', data);
         this.setState({ dataShellAsset: data });
     };
 

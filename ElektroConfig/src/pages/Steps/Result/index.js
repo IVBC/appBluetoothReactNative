@@ -80,7 +80,7 @@ class Result extends Component {
                                     <View
                                         style={{
                                             height: 30,
-                                            width: 200,
+                                            // width: 300,
                                             backgroundColor: '#ccc',
                                             justifyContent: 'center',
                                             padding: 15,
