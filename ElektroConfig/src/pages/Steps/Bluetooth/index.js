@@ -39,6 +39,7 @@ export default class Bluetooth extends Component {
             currentStep: PropTypes.number,
         }).isRequired,
         handleNextPage: PropTypes.func.isRequired,
+        handleIsFinished: PropTypes.func.isRequired,
     };
 
     constructor() {
@@ -315,6 +316,9 @@ export default class Bluetooth extends Component {
                 // disconnect to the peripheral
                 // eslint-disable-next-line react/destructuring-assignment
                 console.log(this.state.connected_peripheral);
+
+                const { handleIsFinished } = this.props;
+                handleIsFinished(true);
 
                 const { handleNextPage } = this.props;
                 handleNextPage(true);

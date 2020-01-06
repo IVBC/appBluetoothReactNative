@@ -144,11 +144,17 @@ export default class Steps extends Component {
             currentStep: 0,
             dataShellAsset: null,
             dataDevice: null,
+            isFinished: false,
         };
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const { currentStep, dataShellAsset, dataDevice } = this.state;
+        const {
+            currentStep,
+            dataShellAsset,
+            dataDevice,
+            isFinished,
+        } = this.state;
         console.tron.log(prevState, this.state);
         if (currentStep === 1) {
             if (!dataShellAsset) {
@@ -174,6 +180,15 @@ export default class Steps extends Component {
                         'Device data required via QR Code'
                     );
                 }
+            }
+        }
+        if (currentStep === 3) {
+            if (!isFinished) {
+                this.viewPager.setPage(prevState.currentStep);
+                Alert.alert(
+                    'The previous step is required.',
+                    'The process of connecting and sending data via bluetooth was not done.'
+                );
             }
         }
         // if (nextState.currentPage != this.state.currentPage) {
@@ -217,6 +232,10 @@ export default class Steps extends Component {
             this.setState({ currentStep: currentStep + 1 });
             this.viewPager.setPage(currentStep + 1);
         }
+    };
+
+    handleIsFinished = async is => {
+        this.setState({ isFinished: is });
     };
 
     // renderLabel = ({ position, stepStatus, label, currentPosition }) => {
@@ -305,6 +324,7 @@ export default class Steps extends Component {
                         key="bluetooth"
                         data={{ dataShellAsset, dataDevice, currentStep }}
                         handleNextPage={this.handleNextPage}
+                        handleIsFinished={this.handleIsFinished}
                     />
                     <Result
                         key="result"
