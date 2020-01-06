@@ -258,7 +258,7 @@ export default class Bluetooth extends Component {
                     }
                 );
             })
-            .catch(error => {
+            .catch(() => {
                 Alert.alert(
                     'Err..',
                     'Something went wrong while trying to connect.'
@@ -277,25 +277,10 @@ export default class Bluetooth extends Component {
             user_id,
         });
 
-        const me = {
-            id: user_id,
-            full_name: value,
-        };
-
         const str = JSON.stringify(value); // convert the object to a string
         const bytes = bytesCounter.count(str); // count the number of bytes
         const data = stringToBytes(str); // convert the string to a byte array
 
-        // construct the UUIDs the same way it was constructed in the server component earlier
-        // const BASE_UUID = '-5659-402b-aeb3-d2f7dcd1b999';
-        // const PERIPHERAL_ID = '0000';
-        // const PRIMARY_SERVICE_ID = '0100';
-
-        // const primary_service_uuid =
-        //     PERIPHERAL_ID + PRIMARY_SERVICE_ID + BASE_UUID; // the service UUID
-        // const ps_characteristic_uuid = `${PERIPHERAL_ID}0300${BASE_UUID}`; // the characteristic ID to write on
-
-        // write the attendees info to the characteristic
         BleManager.write(
             // eslint-disable-next-line react/destructuring-assignment
             this.state.connected_peripheral,
@@ -322,20 +307,6 @@ export default class Bluetooth extends Component {
 
                 const { handleNextPage } = this.props;
                 handleNextPage(true);
-                // BleManager.disconnect(this.state.connected_peripheral)
-                //     .then(() => {
-                //         Alert.alert(
-                //             'Attended',
-                //             'You have successfully attended the event, please disable bluetooth.'
-                //         );
-                //     })
-                //     // eslint-disable-next-line no-unused-vars
-                //     .catch(e => {
-                //         Alert.alert(
-                //             'Error disconnecting',
-                //             "You have successfully attended the event but there's a problem disconnecting to the peripheral, please disable bluetooth to force disconnection."
-                //         );
-                //     });
             })
             // eslint-disable-next-line no-unused-vars
             .catch(error => {
@@ -555,43 +526,6 @@ export default class Bluetooth extends Component {
                     </View>
                 </>
             </View>
-
-            // <View style={styles.container}>
-            //     <View style={styles.header}>
-            //         <View style={styles.app_title}>
-            //             <Text style={styles.header_text}>
-            //                 You need to enable bluetooth to use this app
-            //             </Text>
-            //         </View>
-            //         {/* <View style={styles.header_button_container}>
-            //             {!connected_peripheral && (
-            //                 <Button
-            //                     title="Scan"
-            //                     color="#1491ee"
-            //                     onPress={this.startScan}
-            //                 />
-            //             )}
-            //         </View> */}
-            //     </View>
-
-            //     <View style={styles.cardView}>
-            //         <Spinner
-            //             size={50}
-            //             type="Wave"
-            //             color="#6097FC"
-            //             isVisible
-            //             style={styles.spinner}
-            //         />
-            //         <Icon
-            //             name="bluetooth"
-            //             size={100}
-            //             color="#6097FC"
-            //             borderRadius="8"
-            //             borderColor="#6097FC"
-            //         />
-            //         <View />
-            //     </View>
-            // </View>
         );
     }
 }
