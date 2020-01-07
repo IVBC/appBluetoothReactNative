@@ -174,7 +174,7 @@ export default class Bluetooth extends Component {
     }
 
     enable() {
-        console.tron.log('Ativando...', this.state);
+        // console.tron.log('Ativando...', this.state);
         BleManager.enableBluetooth()
             .then(() => {
                 console.log('Bluetooth is already enabled');
@@ -254,7 +254,7 @@ export default class Bluetooth extends Component {
                     peripheralInfo => {
                         this.attend.call(this, dataShellAsset);
                         console.log('Peripheral info:', peripheralInfo);
-                        console.tron.log(peripheralInfo);
+                        // console.tron.log(peripheralInfo);
                     }
                 );
             })

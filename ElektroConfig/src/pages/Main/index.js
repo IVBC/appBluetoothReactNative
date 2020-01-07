@@ -16,7 +16,7 @@ export default function Main({ navigation }) {
     return (
         <Container>
             <Body>
-                <Logo source={iconTPV} />
+                <Logo resizeMode="center" source={iconTPV} />
                 <InitialButton onPress={() => navigation.navigate('Steps')}>
                     <Icon name="settings" size={20} color="#FFF" />
                     <InitialButtonText> Start </InitialButtonText>

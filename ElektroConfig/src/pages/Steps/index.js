@@ -155,7 +155,7 @@ export default class Steps extends Component {
             dataDevice,
             isFinished,
         } = this.state;
-        console.tron.log(prevState, this.state);
+        // console.tron.log(prevState, this.state);
         if (currentStep === 1) {
             if (!dataShellAsset) {
                 this.viewPager.setPage(prevState.currentStep);
@@ -199,7 +199,7 @@ export default class Steps extends Component {
     }
 
     onStepPress = position => {
-        console.tron.log('apertou -->', position);
+        // console.tron.log('apertou -->', position);
         this.setState({ currentStep: position });
         this.viewPager.setPage(position);
     };
@@ -217,12 +217,12 @@ export default class Steps extends Component {
     );
 
     handleDataShellAsset = async data => {
-        console.tron.log('settandoo dado no handleDataSheelAsset:', data);
+        // console.tron.log('settandoo dado no handleDataSheelAsset:', data);
         this.setState({ dataShellAsset: data });
     };
 
     handleDataDevice = async data => {
-        console.tron.log(data);
+        // console.tron.log(data);
         this.setState({ dataDevice: data });
     };
 

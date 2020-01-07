@@ -36,3 +36,12 @@ allprojects {
         maven { url 'https://jitpack.io' }
     }
 }
+
+subprojects {
+    afterEvaluate { project ->
+        android {
+            compileSdkVersion 28
+            buildToolsVersion "28.0.3"
+        }
+    }
+}

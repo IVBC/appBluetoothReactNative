@@ -21,7 +21,7 @@ class Device extends Component {
 
     onSuccess = e => {
         const check = e.data.substring(0, 4);
-        console.log(`scanned data${check}`);
+        // console.log(`scanned data${check}`);
         this.setState({
             result: e,
             scan: false,
@@ -98,7 +98,7 @@ class Device extends Component {
                                         : styles.cardView
                                 }
                             >
-                                <View style={{ height: 300 }}>
+                                <View style={{ height: '50%' }}>
                                     <FlatList
                                         style={{}}
                                         data={Object.keys(

@@ -16,8 +16,9 @@ export const Body = styled.View`
 `;
 
 export const Logo = styled.Image`
-    width: 430px;
+    width: 300px;
     height: 200px;
+    overflow: visible;
 `;
 export const InitialButton = styled(RectButton)`
     flex-direction: row;
