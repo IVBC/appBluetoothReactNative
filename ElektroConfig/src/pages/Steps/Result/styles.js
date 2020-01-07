@@ -30,6 +30,7 @@ const styles = {
         marginLeft: 10,
         marginRight: 10,
         padding: 20,
+        height: '80%',
         // alignSelf: 'center',
         // justifyContent: 'flex-start',
         alignItems: 'center',
@@ -52,6 +53,7 @@ const styles = {
         paddingBottom: 2,
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     toolbarButton: {
         // width: 50,

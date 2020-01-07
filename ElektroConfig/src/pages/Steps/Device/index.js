@@ -98,7 +98,9 @@ class Device extends Component {
                                         : styles.cardView
                                 }
                             >
-                                <View style={{ height: '50%' }}>
+                                <View
+                                    style={{ height: '50%', marginBottom: 15 }}
+                                >
                                     <FlatList
                                         style={{}}
                                         data={Object.keys(

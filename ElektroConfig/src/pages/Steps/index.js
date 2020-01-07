@@ -238,6 +238,17 @@ export default class Steps extends Component {
         this.setState({ isFinished: is });
     };
 
+    static navigationOptions = {
+        title: 'Firmware Configuration Process',
+        // headerStyle: {
+        //     backgroundColor: '#f4511e',
+        // },
+        // headerTintColor: '#fff',
+        // headerTitleStyle: {
+        //     fontWeight: 'bold',
+        // },
+    };
+
     // renderLabel = ({ position, stepStatus, label, currentPosition }) => {
     //     return (
     //         <Text

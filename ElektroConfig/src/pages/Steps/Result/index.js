@@ -2,7 +2,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withNavigation } from 'react-navigation';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    ScrollView,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './styles';
 
@@ -51,14 +57,15 @@ class Result extends Component {
                         </View>
 
                         <View style={styles.cardView}>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                    justifyContent: 'space-around',
-                                }}
-                            >
-                                {/* <View
+                            <ScrollView centerContent>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'space-around',
+                                    }}
+                                >
+                                    {/* <View
                                     style={{
                                         width: '100%',
                                         height: '60%',
@@ -67,160 +74,161 @@ class Result extends Component {
                                         justifyContent: 'space-around',
                                     }}
                                 > */}
-                                <View
-                                    style={{
-                                        Maxheight: 200,
-                                        backgroundColor: '#fff',
-                                        padding: 20,
-                                        borderColor: '#c8c8c8',
-                                        borderWidth: 1,
-                                        borderRadius: 5,
-                                    }}
-                                >
                                     <View
                                         style={{
-                                            height: 30,
-                                            // width: 300,
-                                            backgroundColor: '#ccc',
-                                            justifyContent: 'center',
-                                            padding: 15,
-                                            borderRadius: 3,
-                                            marginBottom: 10,
+                                            Maxheight: 200,
+                                            backgroundColor: '#fff',
+                                            padding: 20,
+                                            borderColor: '#c8c8c8',
+                                            borderWidth: 1,
+                                            borderRadius: 5,
                                         }}
                                     >
-                                        <Text style={styles.toolbarTitle}>
-                                            Shell Asset
-                                        </Text>
+                                        <View
+                                            style={{
+                                                height: 30,
+                                                // width: 300,
+                                                backgroundColor: '#ccc',
+                                                justifyContent: 'center',
+                                                padding: 15,
+                                                borderRadius: 3,
+                                                marginBottom: 10,
+                                            }}
+                                        >
+                                            <Text style={styles.toolbarTitle}>
+                                                Shell Asset
+                                            </Text>
+                                        </View>
+
+                                        <FlatList
+                                            style={{}}
+                                            data={Object.keys(dataShellAsset)}
+                                            renderItem={({ item }) => (
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row',
+
+                                                        alignItems: 'center',
+                                                        marginBottom: 5,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 20,
+                                                            textTransform:
+                                                                'uppercase',
+                                                            fontWeight: 'bold',
+                                                            color: '#0061A8',
+                                                        }}
+                                                    >
+                                                        {item} :{' '}
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 20,
+                                                        }}
+                                                    >
+                                                        {dataShellAsset[item]}
+                                                    </Text>
+                                                </View>
+                                            )}
+                                            keyExtractor={item => item}
+                                        />
                                     </View>
-
-                                    <FlatList
-                                        style={{}}
-                                        data={Object.keys(dataShellAsset)}
-                                        renderItem={({ item }) => (
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-
-                                                    alignItems: 'center',
-                                                    marginBottom: 5,
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 20,
-                                                        textTransform:
-                                                            'uppercase',
-                                                        fontWeight: 'bold',
-                                                        color: '#0061A8',
-                                                    }}
-                                                >
-                                                    {item} :{' '}
-                                                </Text>
-                                                <Text
-                                                    style={{
-                                                        fontSize: 20,
-                                                    }}
-                                                >
-                                                    {dataShellAsset[item]}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        keyExtractor={item => item}
-                                    />
-                                </View>
-                                <View style={styles.iconReceive}>
-                                    <Icon
-                                        size={100}
-                                        color="#0061A8"
-                                        name="keyboard-tab"
-                                    />
-                                </View>
-                                <View
-                                    style={{
-                                        Maxheight: 300,
-                                        backgroundColor: '#fff',
-                                        padding: 20,
-                                        borderColor: '#c8c8c8',
-                                        borderWidth: 1,
-                                        borderRadius: 5,
-                                    }}
-                                >
+                                    <View style={styles.iconReceive}>
+                                        <Icon
+                                            size={100}
+                                            color="#0061A8"
+                                            name="keyboard-tab"
+                                        />
+                                    </View>
                                     <View
                                         style={{
-                                            height: 30,
-                                            width: 200,
-                                            backgroundColor: '#ccc',
-                                            justifyContent: 'center',
-                                            padding: 15,
-                                            borderRadius: 3,
+                                            Maxheight: 300,
+                                            backgroundColor: '#fff',
+                                            padding: 20,
+                                            borderColor: '#c8c8c8',
+                                            borderWidth: 1,
+                                            borderRadius: 5,
                                         }}
                                     >
-                                        <Text style={styles.toolbarTitle}>
-                                            Device
-                                        </Text>
+                                        <View
+                                            style={{
+                                                height: 30,
+                                                width: 200,
+                                                backgroundColor: '#ccc',
+                                                justifyContent: 'center',
+                                                padding: 15,
+                                                borderRadius: 3,
+                                            }}
+                                        >
+                                            <Text style={styles.toolbarTitle}>
+                                                Device
+                                            </Text>
+                                        </View>
+
+                                        <FlatList
+                                            style={{}}
+                                            data={Object.keys(dataDevice)}
+                                            renderItem={({ item }) => (
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row',
+
+                                                        alignItems: 'center',
+                                                        marginVertical: 8,
+                                                    }}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 20,
+                                                            textTransform:
+                                                                'uppercase',
+                                                            fontWeight: 'bold',
+                                                            color: '#0061A8',
+                                                        }}
+                                                    >
+                                                        {item} :{' '}
+                                                    </Text>
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 20,
+                                                        }}
+                                                    >
+                                                        {dataDevice[item]}
+                                                    </Text>
+                                                </View>
+                                            )}
+                                            keyExtractor={item => item}
+                                        />
                                     </View>
-
-                                    <FlatList
-                                        style={{}}
-                                        data={Object.keys(dataDevice)}
-                                        renderItem={({ item }) => (
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-
-                                                    alignItems: 'center',
-                                                    marginVertical: 8,
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 20,
-                                                        textTransform:
-                                                            'uppercase',
-                                                        fontWeight: 'bold',
-                                                        color: '#0061A8',
-                                                    }}
-                                                >
-                                                    {item} :{' '}
-                                                </Text>
-                                                <Text
-                                                    style={{
-                                                        fontSize: 20,
-                                                    }}
-                                                >
-                                                    {dataDevice[item]}
-                                                </Text>
-                                            </View>
-                                        )}
-                                        keyExtractor={item => item}
-                                    />
+                                    {/* </View> */}
                                 </View>
-                                {/* </View> */}
-                            </View>
-                            <View style={styles.toolbar}>
-                                <Text style={styles.toolbarTitle}>
-                                    Firmware settings were successfully sent to
-                                    the device.
-                                </Text>
-                            </View>
-
-                            <View>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.goBack();
-                                    }}
-                                    style={styles.buttonTouchable}
-                                >
-                                    <Icon
-                                        name="settings-applications"
-                                        size={30}
-                                        color="#FFF"
-                                    />
-                                    <Text style={styles.buttonTextStyle}>
-                                        New Settings
+                                <View style={styles.toolbar}>
+                                    <Text style={styles.toolbarTitle}>
+                                        Firmware settings were successfully sent
+                                        to the device.
                                     </Text>
-                                </TouchableOpacity>
-                            </View>
+                                </View>
+
+                                <View>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            navigation.goBack();
+                                        }}
+                                        style={styles.buttonTouchable}
+                                    >
+                                        <Icon
+                                            name="settings-applications"
+                                            size={30}
+                                            color="#FFF"
+                                        />
+                                        <Text style={styles.buttonTextStyle}>
+                                            New Settings
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </ScrollView>
                         </View>
                     </View>
                 </>

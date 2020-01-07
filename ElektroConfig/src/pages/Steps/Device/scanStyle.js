@@ -83,7 +83,7 @@ const styles = {
     buttonTouchable: {
         fontSize: 21,
         backgroundColor: '#0061a8',
-        marginTop: 32,
+        marginTop: 0,
         borderRadius: 15,
         width: deviceWidth - 62,
         justifyContent: 'center',

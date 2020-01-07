@@ -1,13 +1,6 @@
 import React, { Component } from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
-import {
-    TouchableOpacity,
-    Text,
-    View,
-    FlatList,
-    Alert,
-    ScrollView,
-} from 'react-native';
+import { TouchableOpacity, Text, View, FlatList, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from './scanStyle';
@@ -142,7 +135,9 @@ class Scan extends Component {
                                         : styles.cardView
                                 }
                             >
-                                <View style={{ height: '50%' }}>
+                                <View
+                                    style={{ height: '50%', marginBottom: 15 }}
+                                >
                                     <FlatList
                                         style={{}}
                                         data={Object.keys(dataShellAsset)}
@@ -196,10 +191,15 @@ class Scan extends Component {
                     )}
 
                     {scan && (
-                        <View style={{ flex: 1 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                            }}
+                        >
                             <QRCodeScanner
                                 reactivate
                                 showMarker
+                                style={{}}
                                 ref={node => {
                                     this.scanner = node;
                                 }}
