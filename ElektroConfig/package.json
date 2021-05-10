@@ -13,7 +13,7 @@
     "@react-native-community/viewpager": "^3.3.0",
     "bytes-counter": "^1.0.0",
     "convert-string": "^0.1.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
     "random-id": "^1.0.3",
     "react": "16.9.0",
